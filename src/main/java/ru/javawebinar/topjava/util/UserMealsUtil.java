@@ -40,20 +40,19 @@ public class UserMealsUtil {
             if( mapDay.containsKey(userMeal.getDateTime().toLocalDate()))
                 calories += mapDay.get(userMeal.getDateTime().toLocalDate());
             mapDay.put(userMeal.getDateTime().toLocalDate(), calories);
+        }
+        for( UserMeal userMeal: mealList){
             // заносим в итоговую таблицу, если время в интервале
-/*            LocalTime time = userMeal.getDateTime().toLocalTime();
+            LocalTime time = userMeal.getDateTime().toLocalTime();
             if(TimeUtil.isBetween(time, startTime, endTime)){
                 list.add(new UserMealWithExceed(
                         userMeal.getDateTime(),
                         userMeal.getDescription(),
                         userMeal.getCalories(),
-                        true));
+                        mapDay.get(userMeal.getDateTime().toLocalDate()) <= caloriesPerDay));
             }
-  */      }
-        for( int i = 0; i < list.size(); i++){
-            UserMealWithExceed userMealWithExceed = list.get(i);
-//            if(mapDay.get(userMealWithExceed.)
         }
-        return null;
+
+        return list;
     }
 }
