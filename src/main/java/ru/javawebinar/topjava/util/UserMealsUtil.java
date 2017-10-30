@@ -34,12 +34,16 @@ public class UserMealsUtil {
         System.out.println("TODO return filtered list with correctly exceeded field");
         List<UserMealWithExceed> list = new ArrayList<>();
         Map<LocalDate, Integer> mapDay = new HashMap<>();
-        for( UserMeal userMeal: mealList){
+/*        for( UserMeal userMeal: mealList){
             // заносим в таблицу дней
             int calories = userMeal.getCalories();
             if( mapDay.containsKey(userMeal.getDateTime().toLocalDate()))
                 calories += mapDay.get(userMeal.getDateTime().toLocalDate());
             mapDay.put(userMeal.getDateTime().toLocalDate(), calories);
+        }
+*/        for( UserMeal userMeal: mealList){
+            // заносим в таблицу дней
+            mapDay.merge(userMeal.getDateTime().toLocalDate(), userMeal.getCalories(), (a,b) -> a + b);
         }
         for( UserMeal userMeal: mealList){
             // заносим в итоговую таблицу, если время в интервале
