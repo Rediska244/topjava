@@ -17,38 +17,29 @@ import java.util.*;
 public class UserMealsUtil {
     public static void main(String[] args) {
         List<UserMeal> mealList = Arrays.asList(
-                new UserMeal(LocalDateTime.of(2015, Month.MAY, 30,10,0), "Завтрак", 500),
-                new UserMeal(LocalDateTime.of(2015, Month.MAY, 30,13,0), "Обед", 1000),
-                new UserMeal(LocalDateTime.of(2015, Month.MAY, 30,20,0), "Ужин", 500),
-                new UserMeal(LocalDateTime.of(2015, Month.MAY, 31,10,0), "Завтрак", 1000),
-                new UserMeal(LocalDateTime.of(2015, Month.MAY, 31,13,0), "Обед", 500),
-                new UserMeal(LocalDateTime.of(2015, Month.MAY, 31,20,0), "Ужин", 510)
+                new UserMeal(LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500),
+                new UserMeal(LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000),
+                new UserMeal(LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Ужин", 500),
+                new UserMeal(LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Завтрак", 1000),
+                new UserMeal(LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Обед", 500),
+                new UserMeal(LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510)
         );
-        getFilteredWithExceeded(mealList, LocalTime.of(7, 0), LocalTime.of(12,0), 2000);
+        getFilteredWithExceeded(mealList, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000);
 //        .toLocalDate();
 //        .toLocalTime();
     }
 
-    public static List<UserMealWithExceed>  getFilteredWithExceeded(List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
-        // TODO return filtered list with correctly exceeded field
-        System.out.println("TODO return filtered list with correctly exceeded field");
+    public static List<UserMealWithExceed> getFilteredWithExceeded(List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
         List<UserMealWithExceed> list = new ArrayList<>();
         Map<LocalDate, Integer> mapDay = new HashMap<>();
-/*        for( UserMeal userMeal: mealList){
+        for (UserMeal userMeal : mealList) {
             // заносим в таблицу дней
-            int calories = userMeal.getCalories();
-            if( mapDay.containsKey(userMeal.getDateTime().toLocalDate()))
-                calories += mapDay.get(userMeal.getDateTime().toLocalDate());
-            mapDay.put(userMeal.getDateTime().toLocalDate(), calories);
+            mapDay.merge(userMeal.getDateTime().toLocalDate(), userMeal.getCalories(), (a, b) -> a + b);
         }
-*/        for( UserMeal userMeal: mealList){
-            // заносим в таблицу дней
-            mapDay.merge(userMeal.getDateTime().toLocalDate(), userMeal.getCalories(), (a,b) -> a + b);
-        }
-        for( UserMeal userMeal: mealList){
+        for (UserMeal userMeal : mealList) {
             // заносим в итоговую таблицу, если время в интервале
             LocalTime time = userMeal.getDateTime().toLocalTime();
-            if(TimeUtil.isBetween(time, startTime, endTime)){
+            if (TimeUtil.isBetween(time, startTime, endTime)) {
                 list.add(new UserMealWithExceed(
                         userMeal.getDateTime(),
                         userMeal.getDescription(),
