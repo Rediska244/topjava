@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.model;
 
 import java.time.LocalDateTime;
+import ru.javawebinar.topjava.model.UserMeal;
 
 /**
  * GKislin
@@ -21,5 +22,4 @@ public class UserMealWithExceed {
         this.calories = calories;
         this.exceed = exceed;
     }
-
 }
