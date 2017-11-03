@@ -30,8 +30,6 @@ public class UserMealsUtil {
                 new UserMeal(LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510)
         );
         List<UserMealWithExceed> list = getFilteredWithExceeded(mealList, LocalTime.of(7, 0), LocalTime.of(14, 0), 2000);
-//        .toLocalDate();
-//        .toLocalTime();
     }
 
     public static List<UserMealWithExceed> getFilteredWithExceeded(List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
@@ -41,7 +39,6 @@ public class UserMealsUtil {
         for (UserMeal userMeal : mealList) {
             mapDay.merge(userMeal.getDateTime().toLocalDate(), userMeal.getCalories(), (a, b) -> a + b);
             LocalTime time = userMeal.getDateTime().toLocalTime();
-            // если входит
             LocalDate localDate = userMeal.getDateTime().toLocalDate();
             if (TimeUtil.isBetween(time, startTime, endTime)) {
                 if (mapTrue.containsKey(localDate)) {
@@ -92,12 +89,6 @@ public class UserMealsUtil {
                 }
             }
         }
-        List<UserMealWithExceed> list = new ArrayList<>();
-
-        for (Map.Entry<LocalDate, List<UserMealWithExceed>> m : mapItog.entrySet()) {
-            list.addAll(m.getValue());
-        }
-//        return values.stream().flatMap(identity()).collect(toList());
-        return list;
+        return mapItog.values().stream().flatMap(x -> x.stream()).collect(toList());
     }
 }
