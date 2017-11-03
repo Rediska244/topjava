@@ -10,6 +10,9 @@ import java.time.LocalTime;
 import java.time.Month;
 import java.util.*;
 
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toList;
+
 /**
  * GKislin
  * 31.05.2015.
@@ -90,9 +93,11 @@ public class UserMealsUtil {
             }
         }
         List<UserMealWithExceed> list = new ArrayList<>();
+
         for (Map.Entry<LocalDate, List<UserMealWithExceed>> m : mapItog.entrySet()) {
             list.addAll(m.getValue());
         }
+//        return values.stream().flatMap(identity()).collect(toList());
         return list;
     }
 }
