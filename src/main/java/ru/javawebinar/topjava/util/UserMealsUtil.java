@@ -32,8 +32,8 @@ public class UserMealsUtil {
     }
 
     public static List<UserMealWithExceed> getFilteredWithExceeded(List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
+        Map<LocalDate, List<UserMealWithExceed>> mapItog = new HashMap<>();
         Map<LocalDate, List<UserMealWithExceed>> mapTrue = new HashMap<>();
-        Map<LocalDate, List<UserMealWithExceed>> mapFalse = new HashMap<>();
 
         for (UserMeal userMeal : mealList) {
             mapDay.merge(userMeal.getDateTime().toLocalDate(), userMeal.getCalories(), (a, b) -> a + b);
@@ -41,33 +41,33 @@ public class UserMealsUtil {
             // если входит
             LocalDate localDate = userMeal.getDateTime().toLocalDate();
             if (TimeUtil.isBetween(time, startTime, endTime)) {
-                if (mapFalse.containsKey(localDate)) {
-                    List<UserMealWithExceed> list1 = mapFalse.get(localDate);
+                if (mapTrue.containsKey(localDate)) {
+                    List<UserMealWithExceed> list1 = mapTrue.get(localDate);
                     list1.add(new UserMealWithExceed(
                             userMeal.getDateTime(),
                             userMeal.getDescription(),
                             userMeal.getCalories(),
-                            false));
+                            true));
                 } else {
                     List<UserMealWithExceed> list1 = new ArrayList<>();
                     list1.add(new UserMealWithExceed(
                             userMeal.getDateTime(),
                             userMeal.getDescription(),
                             userMeal.getCalories(),
-                            false));
-                    mapFalse.put(localDate, list1);
+                            true));
+                    mapTrue.put(localDate, list1);
                 }
-                if (mapTrue.containsKey(localDate)) {
+                if (mapItog.containsKey(localDate)) {
                     if (mapDay.get(localDate) > caloriesPerDay) {
-                        mapTrue.remove(localDate);
-                        mapTrue.put(localDate, mapFalse.get(localDate));
+                        mapItog.remove(localDate);
+                        mapItog.put(localDate, mapTrue.get(localDate));
                     } else {
-                        List<UserMealWithExceed> list1 = mapTrue.get(localDate);
+                        List<UserMealWithExceed> list1 = mapItog.get(localDate);
                         list1.add(new UserMealWithExceed(
                                 userMeal.getDateTime(),
                                 userMeal.getDescription(),
                                 userMeal.getCalories(),
-                                true));
+                                false));
                     }
                 } else {
                     if (mapDay.get(localDate) <= caloriesPerDay) {
@@ -76,21 +76,21 @@ public class UserMealsUtil {
                                 userMeal.getDateTime(),
                                 userMeal.getDescription(),
                                 userMeal.getCalories(),
-                                true));
-                        mapTrue.put(localDate, list1);
+                                false));
+                        mapItog.put(localDate, list1);
                     }
                 }
             } else {
-                if (mapTrue.containsKey(localDate)) {
+                if (mapItog.containsKey(localDate)) {
                     if (mapDay.get(localDate) > caloriesPerDay) {
-                        mapTrue.remove(localDate);
-                        mapTrue.put(localDate, mapFalse.get(localDate));
+                        mapItog.remove(localDate);
+                        mapItog.put(localDate, mapTrue.get(localDate));
                     }
                 }
             }
         }
         List<UserMealWithExceed> list = new ArrayList<>();
-        for (Map.Entry<LocalDate, List<UserMealWithExceed>> m : mapTrue.entrySet()) {
+        for (Map.Entry<LocalDate, List<UserMealWithExceed>> m : mapItog.entrySet()) {
             list.addAll(m.getValue());
         }
         return list;
